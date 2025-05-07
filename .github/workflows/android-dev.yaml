@@ -25,6 +25,11 @@ jobs:
           channel: 'stable'
           flutter-version: '3.24.2'
 
+      - name: Authenticate with GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "Authenticated with GitHub"
+
       - name: Install dependencies
         run: flutter pub get
       
