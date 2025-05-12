@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      -name: Flutter Android CI/CD
+      - name: Flutter Android CI/CD
       - uses: actions/checkout@v3
       
       - name: Set up Java 17
