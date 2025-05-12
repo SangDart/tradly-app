@@ -12,6 +12,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Flutter Android CI/CD
         run: echo "Starting Flutter Android CI/CD pipeline"
