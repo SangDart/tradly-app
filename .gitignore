@@ -12,13 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 
-# Env
-..env
-<<<<<<< HEAD
-*.env.g.dart
-=======
-*..env.g.dart
->>>>>>> b98ed6c8e89660d93e38c0f9c1d64812db541e2d
+
 # IntelliJ related
 *.iml
 *.ipr
