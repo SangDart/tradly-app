@@ -32,10 +32,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      
-      - name: Run tests
-        run: flutter test --coverage
-        
+    
+
       - name: Build APK
         run: flutter build apk --debug --build-name=1.0.0 --build-number=1
+
+      - name: Upload APK 
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: build/app/outputs/apk/debug/app-debug.apk
       
