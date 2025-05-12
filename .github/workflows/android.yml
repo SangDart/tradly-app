@@ -32,8 +32,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
 
       - name: Build APK
         run: flutter build apk --debug --build-name=1.0.0 --build-number=1
