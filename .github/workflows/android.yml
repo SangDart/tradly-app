@@ -27,9 +27,11 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.0'
+          flutter-version: '3.27.0'
           channel: 'stable'
 
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses
 
       - name: Get Flutter Dependencies
         run: flutter pub get
