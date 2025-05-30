@@ -49,7 +49,8 @@ class _SignInScreenState extends State<SignInScreen> {
             authRepository: _authRepository,
           ),
           child: BlocListener<SignInBloc, SignInState>(
-            listener: (context, state) {
+            listener: (context, state) async {
+              final navigator = Navigator.of(context);
               state.status.maybeWhen(
                 orElse: () {
                   context.loaderOverlay.hide();
@@ -58,10 +59,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setString(
                       'session_token', state.sessionToken ?? '');
-                  if (context.mounted) {
-                    await context.pushNamed(TAPaths.home.name);
-                  }
                   context.loaderOverlay.hide();
+                  navigator.pushNamed(TAPaths.home.name);
                 },
                 loading: () {
                   context.loaderOverlay.show();

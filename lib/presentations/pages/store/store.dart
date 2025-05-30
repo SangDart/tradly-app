@@ -275,12 +275,11 @@ class _StoreScreenState extends State<StoreScreen> {
                               final product = state.products?[index];
 
                               if (product != null) {
-                                final updatedProduct = await context.pushNamed(
-                                    TAPaths.editProduct.name,
-                                    extra: product);
+                                final updatedProduct =
+                                    await _navigateToEditProduct(
+                                        context, product);
 
-                                if (updatedProduct != null &&
-                                    updatedProduct is ProductModel) {
+                                if (updatedProduct != null) {
                                   context.read<StoreBloc>().add(
                                         EditProductButtonEvt(
                                           product: updatedProduct,
@@ -321,5 +320,14 @@ class _StoreScreenState extends State<StoreScreen> {
         ),
       ],
     );
+  }
+
+  Future<ProductModel?> _navigateToEditProduct(
+      BuildContext context, ProductModel product) async {
+    final navigator = Navigator.of(context);
+    return await navigator.pushNamed(
+      TAPaths.editProduct.name,
+      arguments: product,
+    ) as ProductModel?;
   }
 }
