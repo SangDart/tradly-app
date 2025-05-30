@@ -38,9 +38,11 @@ jobs:
           mkdir -p $HOME/android-sdk/cmdline-tools
           unzip android_sdk_tools.zip -d $HOME/android-sdk/cmdline-tools
           mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
-          export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
-          export PATH=$ANDROID_HOME/platform-tools:$PATH
+          echo "export ANDROID_HOME=$HOME/android-sdk" >> $HOME/.bashrc
+          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $HOME/.bashrc
+          echo "export PATH=$ANDROID_HOME/platform-tools:$PATH" >> $HOME/.bashrc
+          source $HOME/.bashrc
+          sdkmanager --version || echo "SDK Manager installation failed"
 
       - name: Accept Android SDK Licenses
         run: yes | sdkmanager --licenses
