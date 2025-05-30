@@ -32,7 +32,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-    
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          PATH: /usr/local/lib/android/sdk/tools/bin:/usr/local/lib/android/sdk/platform-tools:$PATH
 
       - name: Build APK
         run: flutter build apk --debug --build-name=1.0.0 --build-number=1
@@ -42,4 +46,3 @@ jobs:
         with:
           name: android-debug-apk
           path: build/app/outputs/apk/debug/app-debug.apk
-      
