@@ -49,9 +49,6 @@ jobs:
       # Runs unit test
       - name: Run tests
         run: flutter test
-
-      - name: Accept Android SDK Licenses
-        run: yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
       
 
       # Create android apk
