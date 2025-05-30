@@ -6,13 +6,6 @@ import 'package:tradly_app/core/utils/responsive.dart';
 import 'package:tradly_app/presentations/widgets/assets.dart';
 import 'package:tradly_app/presentations/widgets/text.dart';
 
-class TAAppBarSize {
-  static const double small = kToolbarHeight;
-  static const double minimum = 72;
-  static const double medium = 126;
-  static const double large = 182;
-}
-
 enum TAAppBarType {
   home,
   productList,
@@ -25,6 +18,14 @@ enum TAAppBarBottomType {
   options,
   search,
   imageBackground,
+  custom,
+}
+
+class TAAppBarSize {
+  static const double small = kToolbarHeight;
+  static const double minimum = 72;
+  static const double medium = 126;
+  static const double large = 182;
 }
 
 class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -42,12 +43,37 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.filterOptions,
     this.background,
     this.onBackPressed,
+    this.onSortPressed,
+    this.onLocationPressed,
     this.elevation = 0,
     this.onPressed,
     this.actions,
     this.centerTitle = true,
     super.key,
   });
+
+  final TAAppBarType appBarType;
+  final Widget? leading;
+  final Widget? title;
+  final Widget? subTitle;
+  final double toolbarHeight;
+  final Color? backgroundColor;
+  final Widget? trailing;
+  final bool automaticallyImplyLeading;
+  final TAAppBarBottomType bottomType;
+  final Widget? searchForm;
+  final Widget? filterOptions;
+  final Widget? background;
+  final VoidCallback? onBackPressed;
+  final double elevation;
+  final VoidCallback? onPressed;
+  final List<Widget>? actions;
+  final bool centerTitle;
+  final VoidCallback? onSortPressed;
+  final VoidCallback? onLocationPressed;
+
+  @override
+  Size get preferredSize => Size.fromHeight(toolbarHeight);
 
   /// Factory constructor for home screen app bar
   factory TAAppBar.home({
@@ -115,7 +141,7 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withAlpha(50),
         ),
         child: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -123,11 +149,8 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       bottomType: bottomType,
-      trailing: Padding(
-        padding: const EdgeInsets.only(right: 16),
-        child: Row(
-          children: (actions ?? []),
-        ),
+      trailing: Row(
+        children: (actions ?? []),
       ),
     );
   }
@@ -154,26 +177,6 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: TAAppBarSize.small,
     );
   }
-
-  final TAAppBarType appBarType;
-  final Widget? leading;
-  final Widget? title;
-  final Widget? subTitle;
-  final double toolbarHeight;
-  final Color? backgroundColor;
-  final Widget? trailing;
-  final bool automaticallyImplyLeading;
-  final TAAppBarBottomType bottomType;
-  final Widget? searchForm;
-  final Widget? filterOptions;
-  final Widget? background;
-  final VoidCallback? onBackPressed;
-  final double elevation;
-  final VoidCallback? onPressed;
-  final List<Widget>? actions;
-  final bool centerTitle;
-  @override
-  Size get preferredSize => Size.fromHeight(toolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +250,7 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
           preferredSize: const Size.fromHeight(60),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: filterOptions ?? _buildDefaultFilterOptions(context),
+            child: filterOptions ?? _filterOptions(context),
           ),
         );
 
@@ -255,6 +258,25 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
         return PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Container(height: 120),
+        );
+
+      case TAAppBarBottomType.custom:
+        return PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: searchForm ?? const SizedBox.shrink(),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                child: filterOptions ?? _filterOptions(context),
+              ),
+            ],
+          ),
         );
 
       case TAAppBarBottomType.none:
@@ -265,36 +287,37 @@ class TAAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
   }
 
-  Widget _buildDefaultFilterOptions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildFilterButton(
-          context,
-          icon: TAAssets.sortList(),
-          label: S.current.productDetailSortByButton,
-          onPressed: () {},
-        ),
-        _buildFilterButton(
-          context,
-          icon: Icon(
-            Icons.location_on,
-            size: 16,
-          ),
-          label: S.current.productDetailLocationButton,
-          onPressed: () {},
-        ),
-        _buildFilterButton(
-          context,
-          icon: TAAssets.category(),
-          label: S.current.productDetailCategoryButton,
-          onPressed: () {},
-        ),
-      ],
-    );
+  Widget _filterOptions(BuildContext context) {
+    return filterOptions ??
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _filterButton(
+              context,
+              icon: TAAssets.sortList(),
+              label: S.current.productDetailSortByButton,
+              onPressed: onSortPressed ?? () {},
+            ),
+            _filterButton(
+              context,
+              icon: Icon(
+                Icons.location_on,
+                size: 16,
+              ),
+              label: S.current.productDetailLocationButton,
+              onPressed: onLocationPressed ?? () {},
+            ),
+            _filterButton(
+              context,
+              icon: TAAssets.category(),
+              label: S.current.productDetailCategoryButton,
+              onPressed: () {},
+            ),
+          ],
+        );
   }
 
-  Widget _buildFilterButton(
+  Widget _filterButton(
     BuildContext context, {
     required Widget icon,
     required String label,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tradly_app/core/extensions/context_extensions.dart';
 import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
 import 'package:tradly_app/data/models/product_model.dart';
@@ -10,6 +11,7 @@ import 'package:tradly_app/presentations/pages/store/states/store_bloc.dart';
 import 'package:tradly_app/presentations/pages/store/states/store_event.dart';
 import 'package:tradly_app/presentations/pages/store/states/store_state.dart';
 import 'package:tradly_app/presentations/widgets/button.dart';
+import 'package:tradly_app/presentations/widgets/form.dart';
 import 'package:tradly_app/presentations/widgets/icons.dart';
 import 'package:tradly_app/presentations/widgets/text.dart';
 import 'package:tradly_app/presentations/widgets/text_field.dart';
@@ -31,7 +33,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _productNameController = TextEditingController();
   final _categoryController = TextEditingController();
   final _priceController = TextEditingController();
-  final _stockController = TextEditingController();
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceTypeController = TextEditingController();
@@ -40,160 +41,184 @@ class _EditProductScreenState extends State<EditProductScreen> {
   List<String> _additionalDetails = ['Cash on delivery', 'Available'];
 
   @override
-  void initState() {
-    super.initState();
-    _productNameController.text = widget.product.title;
-    _categoryController.text = widget.product.categoryType ?? '';
-    _priceController.text = widget.product.price;
-    _stockController.text = widget.product.newPrice ?? '';
-    _locationController.text = widget.product.location ?? '';
-    _descriptionController.text = widget.product.description ?? '';
-    _priceTypeController.text = widget.product.priceType ?? '';
-  }
-
-  @override
   void dispose() {
     _productNameController.dispose();
     _categoryController.dispose();
     _priceController.dispose();
-    _stockController.dispose();
+    _priceTypeController.dispose();
     _locationController.dispose();
     _descriptionController.dispose();
-    _priceTypeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TAScaffold(
-      appBar: TAAppBar(
-        toolbarHeight: TAAppBarSize.small,
-        backgroundColor: context.colorScheme.primary,
-        title: Padding(
-          padding: EdgeInsets.only(left: 16),
-          child: TADisplaySmallText(
-            text: S.current.storeEditProductTitle,
-            fontWeight: FontWeight.w700,
+    context
+        .read<StoreBloc>()
+        .add(InitializeEditProductEvt(product: widget.product));
+
+    return LoaderOverlay(
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: TAScaffold(
+          appBar: TAAppBar(
+            toolbarHeight: TAAppBarSize.small,
+            backgroundColor: context.colorScheme.primary,
+            title: Padding(
+              padding: EdgeInsets.only(left: 16),
+              child: TADisplaySmallText(
+                text: S.current.storeEditProductTitle,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
-        ),
-      ),
-      body: BlocBuilder<StoreBloc, StoreState>(
-        buildWhen: (previous, current) =>
-            previous.imageFiles != current.imageFiles,
-        builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21),
-                  child: _buildPhotoUploadSection(state),
-                ),
-                const SizedBox(height: 14),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: TATitleLargeText(
-                    text: S.current.storeMaxPhotoProductTitle,
-                    color: context.colorScheme.outline,
-                  ),
-                ),
-                const SizedBox(height: 27),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  color: context.colorScheme.onPrimary,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TATextField(
-                          label: S.current.storeProductNameLabel,
-                          controller: _productNameController,
-                        ),
-                        TATextField(
-                          label: S.current.storeCategoryProductLabel,
-                          controller: _categoryController,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TATextField(
-                                label: S.current.storePriceLabel,
-                                controller: _priceController,
-                                keyboardType: TextInputType.number,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: TATextField(
-                                label: S.current.storeOfferPriceLabel,
-                                controller: _stockController,
-                                keyboardType: TextInputType.number,
-                              ),
-                            ),
-                          ],
-                        ),
-                        TATextField(
-                          label: S.current.storeLocationDetailsLabel,
-                          controller: _locationController,
-                          suffixIcon: TAIcons.map(),
-                        ),
-                        TATextField(
-                          label: S.current.storeProductDescriptionLabel,
-                          controller: _descriptionController,
-                        ),
-                        TATextField(
-                          label: S.current.storePriceTypeLabel,
-                          controller: _priceTypeController,
-                        ),
-                        TATextField(
-                          label: S.current.storeAddDeataisLabel,
-                          isChipInput: true,
-                          chips: _additionalDetails,
-                          onChipsChanged: (chips) {
-                            setState(() {
-                              _additionalDetails = chips;
-                            });
+          body: BlocBuilder<StoreBloc, StoreState>(
+            builder: (context, state) {
+              if (state.productToEdit != null) {
+                _productNameController.text = state.productToEdit?.title ?? '';
+                _categoryController.text =
+                    state.productToEdit?.categoryType ?? '';
+                _priceController.text = state.productToEdit?.price ?? '';
+                _locationController.text = state.productToEdit?.location ?? '';
+                _priceTypeController.text =
+                    state.productToEdit?.priceType ?? '';
+                _descriptionController.text =
+                    state.productToEdit?.description ?? '';
+              }
+
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 21),
+                      child: _buildPhotoUploadSection(state),
+                    ),
+                    const SizedBox(height: 14),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: TATitleLargeText(
+                        text: S.current.storeMaxPhotoProductTitle,
+                        color: context.colorScheme.outline,
+                      ),
+                    ),
+                    const SizedBox(height: 27),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      color: context.colorScheme.onPrimary,
+                      child: Form(
+                        key: _formKey,
+                        child: BlocBuilder<StoreBloc, StoreState>(
+                          builder: (context, state) {
+                            return TAForm(
+                                isValidated: (valid) =>
+                                    context.read<StoreBloc>().add(
+                                          EditFormValidateChangedEvt(
+                                            isValidate: valid,
+                                            product: widget.product,
+                                          ),
+                                        ),
+                                textFields: [
+                                  TATextField(
+                                    label: S.current.storeProductNameLabel,
+                                    controller: _productNameController,
+                                  ),
+                                  TATextField(
+                                    label: S.current.storeCategoryProductLabel,
+                                    controller: _categoryController,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TATextField(
+                                          label: S.current.storePriceLabel,
+                                          controller: _priceController,
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: TATextField(
+                                          label: S.current.storeOfferPriceLabel,
+                                          controller: _priceTypeController,
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  TATextField(
+                                    label: S.current.storeLocationDetailsLabel,
+                                    controller: _locationController,
+                                    suffixIcon: TAIcons.map(),
+                                  ),
+                                  TATextField(
+                                    label:
+                                        S.current.storeProductDescriptionLabel,
+                                    controller: _descriptionController,
+                                  ),
+                                  TATextField(
+                                    label: S.current.storePriceTypeLabel,
+                                    controller: _priceTypeController,
+                                  ),
+                                  TATextField(
+                                    label: S.current.storeAddDeataisLabel,
+                                    isChipInput: true,
+                                    chips: _additionalDetails,
+                                    onChipsChanged: (chips) {
+                                      setState(() {
+                                        _additionalDetails = chips;
+                                      });
+                                    },
+                                  ),
+                                ]);
                           },
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(20),
-        color: context.colorScheme.onPrimary,
-        child: TAElevatedButton(
-          text: S.current.storeEditProductButton,
-          backgroundColor: context.colorScheme.primary,
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              final updatedProduct = widget.product.copyWith(
-                title: _productNameController.text,
-                categoryType: _categoryController.text,
-                price: _priceController.text,
-                newPrice: _stockController.text,
-                location: _locationController.text,
-                description: _descriptionController.text,
-                priceType: _priceTypeController.text,
-                imageUrl:
-                    context.read<StoreBloc>().state.imageFiles?.isNotEmpty ??
-                            false
-                        ? context.read<StoreBloc>().state.imageFiles!.first.path
-                        : widget.product.imageUrl,
               );
+            },
+          ),
+          bottomNavigationBar: BlocBuilder<StoreBloc, StoreState>(
+            builder: (context, state) {
+              return Container(
+                padding: const EdgeInsets.all(20),
+                color: context.colorScheme.onPrimary,
+                child: TAElevatedButton(
+                  text: S.current.storeEditProductButton,
+                  backgroundColor: context.colorScheme.primary,
+                  onPressed: () {
+                    final storeId = context.read<StoreBloc>().state.stores?.id;
 
-              context
-                  .read<StoreBloc>()
-                  .add(EditProductEvt(product: updatedProduct));
-              Navigator.pop(context, updatedProduct);
-            }
-          },
+                    if (_formKey.currentState?.validate() ?? false) {
+                      context.loaderOverlay.show();
+                      final updatedProduct = ProductModel(
+                        id: widget.product.id,
+                        title: _productNameController.text,
+                        price: _priceController.text,
+                        description: _descriptionController.text,
+                        location: _locationController.text,
+                        priceType: _priceTypeController.text,
+                        imageUrl:
+                            state.imageFiles?.map((e) => e.path).join(',') ??
+                                '',
+                        storeId: storeId,
+                      );
+
+                      Future.delayed(const Duration(seconds: 1), () {
+                        if (context.mounted) {
+                          context.loaderOverlay.hide();
+                          Navigator.pop(context, updatedProduct);
+                        }
+                      });
+                    }
+                  },
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -212,7 +237,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
               child: _buildAddPhotoBox(),
             );
           } else {
-            return _buildPhotoBox(state.imageFiles![index - 1], index - 1);
+            return _buildPhotoBox(
+              File(state.imageFiles![index - 1].path),
+              index - 1,
+            );
           }
         },
       ),
@@ -275,12 +303,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
             right: 4,
             child: GestureDetector(
               onTap: () {
-                context.read<StoreBloc>().add(RemoveImageEvt(index: index));
+                context.read<StoreBloc>().add(RemoveImageEvt(image: index));
               },
               child: Container(
                 decoration: BoxDecoration(
-                    color: context.colorScheme.onSecondaryContainer
-                        .withOpacity(0.5),
+                    color:
+                        context.colorScheme.onSecondaryContainer.withAlpha(150),
                     shape: BoxShape.circle),
                 child: TAIcons.close(),
               ),

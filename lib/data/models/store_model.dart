@@ -1,45 +1,69 @@
+import 'package:tradly_app/data/models/product_model.dart';
+
 class StoreModel {
-  final int? id;
-  final String name;
-  final String? description;
+  int? id;
+  final String storeName;
+  final String? storeWebAddress;
+  final String? storeDescription;
+  final String? storeType;
   final String? imageUrl;
   final String? address;
-  final String? webAddress;
+  final String? city;
   final String? logoStore;
+  final String? country;
+  final String? courieName;
+  final List<ProductModel>? products;
 
   StoreModel({
     this.id,
-    required this.name,
+    required this.storeName,
     this.imageUrl,
     this.logoStore,
-    this.description,
+    this.storeDescription,
     this.address,
-    this.webAddress,
+    this.storeWebAddress,
+    this.products,
+    this.storeType,
+    this.city,
+    this.country,
+    this.courieName,
   });
 
-  // Factory method to create a StoreModel from a JSON object
-  factory StoreModel.fromJson(Map<String, dynamic> json) {
+  factory StoreModel.fromMap(Map<String, dynamic> map) {
+    final productList = map['products'] as List<dynamic>?;
+
     return StoreModel(
-      id: json['id'],
-      name: json['name'],
-      imageUrl: json['imageUrl'],
-      logoStore: json['logoStore'],
-      description: json['description'],
-      address: json['address'],
-      webAddress: json['webAddress'],
+      id: map['id'] as int?,
+      storeName: map['storeName'] ?? '',
+      imageUrl: map['imageUrl'],
+      logoStore: map['logoStore'],
+      storeDescription: map['storeDescription'],
+      address: map['address'],
+      storeWebAddress: map['storeWebAddress'],
+      storeType: map['storeType'],
+      city: map['city'],
+      country: map['country'],
+      courieName: map['courieName'],
+      products:
+          productList?.map((item) => ProductModel.fromJson(item)).toList(),
     );
   }
 
-  // Method to convert StoreModel to JSON
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
+      if (id != null) 'id': id,
+      'storeName': storeName,
+      'storeWebAddress': storeWebAddress,
+      'storeDescription': storeDescription,
+      'storeType': storeType,
       'imageUrl': imageUrl,
-      'logoStore': logoStore,
-      'description': description,
       'address': address,
-      'webAddress': webAddress,
+      'city': city,
+      'logoStore': logoStore,
+      'country': country,
+      'courieName': courieName,
+      if (products != null)
+        'products': products!.map((product) => product.toJson()).toList(),
     };
   }
 }

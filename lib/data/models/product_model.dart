@@ -6,12 +6,12 @@ enum ProductTag {
 class ProductType {
   final int id;
   final int productId;
-  final String type;
+  final String tag;
 
   ProductType({
     required this.id,
     required this.productId,
-    required this.type,
+    required this.tag,
   });
 
   // Factory method to create a ProductType from a JSON object
@@ -19,7 +19,7 @@ class ProductType {
     return ProductType(
       id: json['id'],
       productId: json['productId'],
-      type: json['type'],
+      tag: json['tag'],
     );
   }
 
@@ -28,7 +28,7 @@ class ProductType {
     return {
       'id': id,
       'productId': productId,
-      'type': type,
+      'tag': tag,
     };
   }
 }
@@ -44,9 +44,14 @@ class ProductModel {
   final String? priceType;
   final String? condition;
   final String? location;
+  final String? street;
+  final String? city;
+  final String? state;
+  final String? zipCode;
   final String? categoryType;
   final int? categoryId;
-  final List<ProductType>? productTypes;
+  final int? storeId;
+  final List<ProductType>? productType;
 
   ProductModel({
     this.id,
@@ -57,11 +62,16 @@ class ProductModel {
     this.newPrice,
     this.categoryId,
     this.description,
-    this.productTypes,
     this.priceType,
     this.condition,
+    this.street,
+    this.city,
     this.location,
+    this.state,
+    this.zipCode,
     this.categoryType,
+    this.storeId,
+    this.productType,
   });
 
   // Factory method to create a ProductModel from a JSON object
@@ -77,9 +87,14 @@ class ProductModel {
       priceType: json['priceType'],
       condition: json['condition'],
       location: json['location'],
+      street: json['street'],
+      city: json['city'],
+      state: json['state'],
+      zipCode: json['zipCode'],
       categoryType: json['categoryType'],
       categoryId: json['categoryId'],
-      productTypes: (json['product_types'] as List<dynamic>?)
+      storeId: json['storeId'],
+      productType: (json['productType'] as List<dynamic>?)
           ?.map((e) => ProductType.fromJson(e))
           .toList(),
     );
@@ -98,9 +113,14 @@ class ProductModel {
       'priceType': priceType,
       'condition': condition,
       'location': location,
+      'street': street,
+      'city': city,
+      'state': state,
+      'zipCode': zipCode,
       'categoryType': categoryType,
       'categoryId': categoryId,
-      'product_types': productTypes?.map((e) => e.toJson()).toList(),
+      'storeId': storeId,
+      'productType': productType?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -115,9 +135,14 @@ class ProductModel {
     String? priceType,
     String? condition,
     String? location,
+    String? street,
+    String? city,
+    String? state,
+    String? zipCode,
     String? categoryType,
     int? categoryId,
-    List<ProductType>? productTypes,
+    int? storeId,
+    List<ProductType>? productType,
   }) {
     return ProductModel(
       id: id ?? this.id,
@@ -128,11 +153,16 @@ class ProductModel {
       newPrice: newPrice ?? this.newPrice,
       description: description ?? this.description,
       priceType: priceType ?? this.priceType,
-      condition: condition ?? this.condition,
       location: location ?? this.location,
+      condition: condition ?? this.condition,
+      street: street ?? this.street,
+      city: city ?? this.city,
+      state: state ?? this.state,
+      zipCode: zipCode ?? this.zipCode,
       categoryType: categoryType ?? this.categoryType,
       categoryId: categoryId ?? this.categoryId,
-      productTypes: productTypes ?? this.productTypes,
+      storeId: storeId ?? this.storeId,
+      productType: productType ?? this.productType,
     );
   }
 }

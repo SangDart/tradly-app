@@ -18,8 +18,10 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
@@ -41,13 +43,55 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
+  }
+
+  /// `Tradly App`
+  String get tradlyAppTitle {
+    return Intl.message(
+      'Tradly App',
+      name: 'tradlyAppTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications are disabled. Please enable notifications in your device settings to receive updates`
+  String get tradlyAppContent {
+    return Intl.message(
+      'Notifications are disabled. Please enable notifications in your device settings to receive updates',
+      name: 'tradlyAppContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get tradlyCancelButton {
+    return Intl.message(
+      'Cancel',
+      name: 'tradlyCancelButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to Settings`
+  String get tradlySettingButton {
+    return Intl.message(
+      'Go to Settings',
+      name: 'tradlySettingButton',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Empowering Artisans, Farmers & Micro Business`
@@ -142,12 +186,7 @@ class S {
 
   /// `Login`
   String get signInLoginButton {
-    return Intl.message(
-      'Login',
-      name: 'signInLoginButton',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Login', name: 'signInLoginButton', desc: '', args: []);
   }
 
   /// `Forgot your password?`
@@ -172,12 +211,7 @@ class S {
 
   /// `Sign up`
   String get signUpButton {
-    return Intl.message(
-      'Sign up',
-      name: 'signUpButton',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign up', name: 'signUpButton', desc: '', args: []);
   }
 
   /// `Welcome to tradly`
@@ -272,12 +306,7 @@ class S {
 
   /// `Sign in`
   String get signInButton {
-    return Intl.message(
-      'Sign in',
-      name: 'signInButton',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sign in', name: 'signInButton', desc: '', args: []);
   }
 
   /// `Verify your phone number`
@@ -312,12 +341,7 @@ class S {
 
   /// `Next`
   String get sendOtpNextButton {
-    return Intl.message(
-      'Next',
-      name: 'sendOtpNextButton',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Next', name: 'sendOtpNextButton', desc: '', args: []);
   }
 
   /// `Phone Number`
@@ -542,12 +566,7 @@ class S {
 
   /// `Follow`
   String get homeFollowButton {
-    return Intl.message(
-      'Follow',
-      name: 'homeFollowButton',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Follow', name: 'homeFollowButton', desc: '', args: []);
   }
 
   /// `New Product `
@@ -592,32 +611,17 @@ class S {
 
   /// `Home`
   String get homeLabel {
-    return Intl.message(
-      'Home',
-      name: 'homeLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Home', name: 'homeLabel', desc: '', args: []);
   }
 
   /// `Browse`
   String get homeBrowseLabel {
-    return Intl.message(
-      'Browse',
-      name: 'homeBrowseLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Browse', name: 'homeBrowseLabel', desc: '', args: []);
   }
 
   /// `Store`
   String get homeStoreLabel {
-    return Intl.message(
-      'Store',
-      name: 'homeStoreLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Store', name: 'homeStoreLabel', desc: '', args: []);
   }
 
   /// `Order History`
@@ -642,12 +646,7 @@ class S {
 
   /// `Tradly`
   String get homeTradlyTitle {
-    return Intl.message(
-      'Tradly',
-      name: 'homeTradlyTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tradly', name: 'homeTradlyTitle', desc: '', args: []);
   }
 
   /// `Beverages`
@@ -850,14 +849,89 @@ class S {
     );
   }
 
-  /// `My Store`
-  String get storeTitle {
+  /// `Double tap to view product details`
+  String get productDetailDoubleTapHint {
     return Intl.message(
-      'My Store',
-      name: 'storeTitle',
+      'Double tap to view product details',
+      name: 'productDetailDoubleTapHint',
       desc: '',
       args: [],
     );
+  }
+
+  /// `50% off`
+  String get productDetailDiscountTitle {
+    return Intl.message(
+      '50% off',
+      name: 'productDetailDiscountTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Qty : 1`
+  String get productDetailQuantityTitle {
+    return Intl.message(
+      'Qty : 1',
+      name: 'productDetailQuantityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tradly App`
+  String get productDetailLocationServiceTitle {
+    return Intl.message(
+      'Tradly App',
+      name: 'productDetailLocationServiceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn on Location Services to allow Tradly App to determine your location.`
+  String get productDetailLocationServiceContent {
+    return Intl.message(
+      'Turn on Location Services to allow Tradly App to determine your location.',
+      name: 'productDetailLocationServiceContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to Settings`
+  String get productDetailLocationGoToSettingsButton {
+    return Intl.message(
+      'Go to Settings',
+      name: 'productDetailLocationGoToSettingsButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get productDetailLocationCancelButton {
+    return Intl.message(
+      'Cancel',
+      name: 'productDetailLocationCancelButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change`
+  String get productDetailLocationChangeButton {
+    return Intl.message(
+      'Change',
+      name: 'productDetailLocationChangeButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Store`
+  String get storeTitle {
+    return Intl.message('My Store', name: 'storeTitle', desc: '', args: []);
   }
 
   /// `Edit Product`
@@ -1032,12 +1106,7 @@ class S {
 
   /// `City`
   String get storeCityLabel {
-    return Intl.message(
-      'City',
-      name: 'storeCityLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('City', name: 'storeCityLabel', desc: '', args: []);
   }
 
   /// `Country`
@@ -1092,12 +1161,7 @@ class S {
 
   /// `Price`
   String get storePriceLabel {
-    return Intl.message(
-      'Price',
-      name: 'storePriceLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Price', name: 'storePriceLabel', desc: '', args: []);
   }
 
   /// `Offer Price`
@@ -1192,12 +1256,7 @@ class S {
 
   /// `Profile`
   String get profileTitle {
-    return Intl.message(
-      'Profile',
-      name: 'profileTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Profile', name: 'profileTitle', desc: '', args: []);
   }
 
   /// `Edit Profile`
@@ -1260,14 +1319,39 @@ class S {
     );
   }
 
-  /// `My Cart`
-  String get checkoutTitle {
+  /// `Are you sure want to logout?`
+  String get profileLogoutContent {
     return Intl.message(
-      'My Cart',
-      name: 'checkoutTitle',
+      'Are you sure want to logout?',
+      name: 'profileLogoutContent',
       desc: '',
       args: [],
     );
+  }
+
+  /// `Cancel`
+  String get profileLogoutCancelButton {
+    return Intl.message(
+      'Cancel',
+      name: 'profileLogoutCancelButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get profileLogoutButton {
+    return Intl.message(
+      'Logout',
+      name: 'profileLogoutButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Cart`
+  String get checkoutTitle {
+    return Intl.message('My Cart', name: 'checkoutTitle', desc: '', args: []);
   }
 
   /// `+ Add New Address`
@@ -1312,12 +1396,7 @@ class S {
 
   /// `Info`
   String get checkoutInforTitle {
-    return Intl.message(
-      'Info',
-      name: 'checkoutInforTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Info', name: 'checkoutInforTitle', desc: '', args: []);
   }
 
   /// `Delivery Free`
@@ -1338,6 +1417,81 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Add a new address`
+  String get checkoutAddAdressTitle {
+    return Intl.message(
+      'Add a new address',
+      name: 'checkoutAddAdressTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use current location`
+  String get checkoutUseCurrentLocationTitle {
+    return Intl.message(
+      'Use current location',
+      name: 'checkoutUseCurrentLocationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get checkoutNameLabel {
+    return Intl.message('Name', name: 'checkoutNameLabel', desc: '', args: []);
+  }
+
+  /// `Phone`
+  String get checkoutPhoneLabel {
+    return Intl.message(
+      'Phone',
+      name: 'checkoutPhoneLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `StreetAddress`
+  String get checkoutAddressLabel {
+    return Intl.message(
+      'StreetAddress',
+      name: 'checkoutAddressLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City`
+  String get checkoutCityLabel {
+    return Intl.message('City', name: 'checkoutCityLabel', desc: '', args: []);
+  }
+
+  /// `State`
+  String get checkoutStateLabel {
+    return Intl.message(
+      'State',
+      name: 'checkoutStateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ZipCode`
+  String get checkoutZipCodeLabel {
+    return Intl.message(
+      'ZipCode',
+      name: 'checkoutZipCodeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get checkoutSaveButton {
+    return Intl.message('Save', name: 'checkoutSaveButton', desc: '', args: []);
   }
 
   /// `Price ({itemCount} item)`
@@ -1379,15 +1533,63 @@ class S {
       args: [],
     );
   }
+
+  /// `Browse`
+  String get browseTitle {
+    return Intl.message('Browse', name: 'browseTitle', desc: '', args: []);
+  }
+
+  /// `Sort by`
+  String get browseSortbyTitle {
+    return Intl.message(
+      'Sort by',
+      name: 'browseSortbyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price: Low to High`
+  String get browsePriceLowToHighTitle {
+    return Intl.message(
+      'Price: Low to High',
+      name: 'browsePriceLowToHighTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price: High to Low`
+  String get browsePriceHighToLowTitle {
+    return Intl.message(
+      'Price: High to Low',
+      name: 'browsePriceHighToLowTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get browseCancelButton {
+    return Intl.message(
+      'Cancel',
+      name: 'browseCancelButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apply`
+  String get browseApplyButton {
+    return Intl.message('Apply', name: 'browseApplyButton', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   const AppLocalizationDelegate();
 
   List<Locale> get supportedLocales {
-    return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'),
-    ];
+    return const <Locale>[Locale.fromSubtags(languageCode: 'en')];
   }
 
   @override

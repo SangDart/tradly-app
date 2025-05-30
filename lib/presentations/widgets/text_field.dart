@@ -13,7 +13,7 @@ class TATextField extends StatefulWidget {
     this.validatorStyle,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsets.all(20),
     this.onTap,
     this.textInputAction = TextInputAction.next,
     this.focusNode,
@@ -189,84 +189,26 @@ class _TATextFieldState extends State<TATextField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Semantics(
-            child: Text(
-              widget.label,
-              style: widget.labelStyle ??
-                  TextStyle(
-                    color: context.colorScheme.onSecondary,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                  ),
-              textScaler: MediaQuery.textScalerOf(context),
-            ),
+          Text(
+            widget.label,
+            style: widget.labelStyle ??
+                TextStyle(
+                  color: context.colorScheme.onSecondary,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                ),
           ),
-          Semantics(
-            child: TextFormField(
-              cursorColor: context.colorScheme.onSurface,
-              controller: widget.controller,
-              initialValue: widget.initialValue,
-              maxLines: widget.maxLines,
-              maxLength: widget.maxLength,
-              keyboardType: widget.keyboardType,
-              obscureText: widget.isPassword ? _textInvisible : false,
-              obscuringCharacter: '*',
-              textInputAction: widget.textInputAction,
-              focusNode: widget.focusNode,
-              onFieldSubmitted: (value) {
-                if (widget.textInputAction == TextInputAction.next) {
-                  FocusScope.of(context).nextFocus();
-                }
-                if (widget.onFieldSubmitted != null) {
-                  widget.onFieldSubmitted!(value);
-                }
-              },
-              onChanged: widget.onChanged,
-              onTap: widget.onTap,
-              onEditingComplete: widget.onEditingComplete,
-              autofocus: widget.autoFocus,
-              scrollPadding: widget.scrollPadding,
-              style: widget.textStyle ??
-                  TextStyle(color: context.colorScheme.onSurface),
-              decoration: InputDecoration(
-                // prefixIconConstraints: BoxConstraints(
-                //   minWidth: 0,
-                // ),
-                contentPadding: const EdgeInsets.only(top: 10),
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xffdbdbde),
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: context.colorScheme.onSurface),
-                ),
-                hintText: widget.hint,
-                hintStyle:
-                    widget.hintStyle ?? TextStyle(color: Colors.grey[400]),
-                counterText: '',
-                suffixIcon: widget.suffixIcon,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCustomTextField(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Semantics(
-          child: TextFormField(
-            cursorColor: context.colorScheme.onPrimary,
-            cursorErrorColor: context.colorScheme.onPrimary,
-            focusNode: widget.focusNode,
+          TextFormField(
+            cursorColor: context.colorScheme.onSurface,
             controller: widget.controller,
+            initialValue: widget.initialValue,
+            maxLines: widget.maxLines,
+            maxLength: widget.maxLength,
+            keyboardType: widget.keyboardType,
+            obscureText: widget.isPassword ? _textInvisible : false,
+            obscuringCharacter: '*',
+            textInputAction: widget.textInputAction,
+            focusNode: widget.focusNode,
             onFieldSubmitted: (value) {
               if (widget.textInputAction == TextInputAction.next) {
                 FocusScope.of(context).nextFocus();
@@ -277,132 +219,32 @@ class _TATextFieldState extends State<TATextField> {
             },
             onChanged: widget.onChanged,
             onTap: widget.onTap,
-            obscuringCharacter: '*',
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            keyboardType: widget.keyboardType,
-            scrollPadding: widget.scrollPadding,
-            textInputAction: widget.textInputAction,
-            initialValue: widget.initialValue,
-            style: widget.textStyle ??
-                TextStyle(
-                  color: context.colorScheme.onPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-            obscureText: widget.isPassword ? _textInvisible : false,
-            maxLines: widget.maxLines,
-            maxLength: widget.maxLength,
-            enableSuggestions: false,
             onEditingComplete: widget.onEditingComplete,
             autofocus: widget.autoFocus,
+            scrollPadding: widget.scrollPadding,
+            style: widget.textStyle ??
+                TextStyle(color: context.colorScheme.onSurface),
             decoration: InputDecoration(
-                labelText: widget.label,
-                hintText: widget.hint,
-                labelStyle: widget.labelStyle ??
-                    TextStyle(
-                      color: context.colorScheme.onPrimary,
-                    ),
-                hintStyle: widget.hintStyle,
-                isDense: true,
-                counterText: '',
-                filled: true,
-                fillColor: context.colorScheme.primary,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(
-                    color: context.colorScheme.onPrimary,
-                  ),
+              contentPadding: const EdgeInsets.only(top: 10),
+              border: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffdbdbde),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(
-                    color: context.colorScheme.onPrimary,
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: context.colorScheme.onSurface),
+              ),
+              errorStyle: widget.validatorStyle ??
+                  TextStyle(
+                    color: context.colorScheme.error,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(
-                    color: context.colorScheme.onPrimary,
-                    width: 2.0,
-                  ),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(
-                    color: context.colorScheme.onPrimary,
-                    width: 2.0,
-                  ),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(
-                    color: context.colorScheme.onPrimary,
-                    width: 2.0,
-                  ),
-                ),
-                errorStyle: widget.validatorStyle ??
-                    TextStyle(
-                      color: context.colorScheme.error,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                prefixIcon: widget.dropdownItems != null
-                    ? DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          items: widget.dropdownItems
-                              ?.map((item) => DropdownMenuItem<String>(
-                                    value: item.value,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 15),
-                                      child: item.child,
-                                    ),
-                                  ))
-                              .toList(),
-                          onChanged: widget.onDropdownChanged,
-                          menuWidth: 100,
-                          value: widget.dropdownItems?.first.value,
-                          dropdownColor: Colors.transparent.withOpacity(0),
-                          iconSize: 30,
-                          alignment: AlignmentDirectional.centerEnd,
-                          style: TextStyle(
-                            color: context.colorScheme.onPrimary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          iconEnabledColor: context.colorScheme.onPrimary,
-                          iconDisabledColor: context.colorScheme.onSurface,
-                          selectedItemBuilder: (BuildContext context) {
-                            return widget.dropdownItems
-                                    ?.map((item) => Center(
-                                          child: Text(
-                                            item.value ?? '',
-                                            style: TextStyle(
-                                              color:
-                                                  context.colorScheme.onPrimary,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ))
-                                    .toList() ??
-                                [];
-                          },
-                        ),
-                      )
-                    : null,
-                suffixIcon: widget.isPassword
-                    ? IconButton(
-                        focusNode: FocusNode(skipTraversal: true),
-                        icon: Icon(
-                          _textInvisible
-                              ? Icons.visibility_off_rounded
-                              : Icons.visibility_rounded,
-                          color: context.colorScheme.onTertiary,
-                          size: 24,
-                        ),
-                        onPressed: togglePasswordVisibility,
-                      )
-                    : widget.suffixIcon),
+            ),
             validator: widget.validator ??
                 (value) {
                   if (value == null || value.isEmpty) {
@@ -411,6 +253,119 @@ class _TATextFieldState extends State<TATextField> {
                   return null;
                 },
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomTextField(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          cursorColor: context.colorScheme.onPrimary,
+          cursorErrorColor: context.colorScheme.onPrimary,
+          focusNode: widget.focusNode,
+          controller: widget.controller,
+          onFieldSubmitted: (value) {
+            if (widget.textInputAction == TextInputAction.next) {
+              FocusScope.of(context).nextFocus();
+            }
+            if (widget.onFieldSubmitted != null) {
+              widget.onFieldSubmitted!(value);
+            }
+          },
+          onChanged: widget.onChanged,
+          onTap: widget.onTap,
+          obscuringCharacter: '*',
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          keyboardType: widget.keyboardType,
+          scrollPadding: widget.scrollPadding,
+          textInputAction: widget.textInputAction,
+          initialValue: widget.initialValue,
+          style: widget.textStyle ??
+              TextStyle(
+                color: context.colorScheme.onPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+          obscureText: widget.isPassword ? _textInvisible : false,
+          maxLines: widget.maxLines,
+          maxLength: widget.maxLength,
+          enableSuggestions: false,
+          onEditingComplete: widget.onEditingComplete,
+          autofocus: widget.autoFocus,
+          decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              labelStyle: widget.labelStyle ??
+                  TextStyle(
+                    color: context.colorScheme.onPrimary,
+                  ),
+              hintStyle: widget.hintStyle,
+              isDense: true,
+              counterText: '',
+              filled: true,
+              fillColor: context.colorScheme.primary,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(
+                  color: context.colorScheme.onPrimary,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(
+                  color: context.colorScheme.onPrimary,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(
+                  color: context.colorScheme.onPrimary,
+                  width: 2.0,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(
+                  color: context.colorScheme.onPrimary,
+                  width: 2.0,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(
+                  color: context.colorScheme.onPrimary,
+                  width: 2.0,
+                ),
+              ),
+              errorStyle: widget.validatorStyle ??
+                  TextStyle(
+                    color: context.colorScheme.error,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      focusNode: FocusNode(skipTraversal: true),
+                      icon: Icon(
+                        _textInvisible
+                            ? Icons.visibility_off_rounded
+                            : Icons.visibility_rounded,
+                        color: context.colorScheme.onTertiary,
+                        size: 24,
+                      ),
+                      onPressed: togglePasswordVisibility,
+                    )
+                  : widget.suffixIcon),
+          validator: widget.validator ??
+              (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter ${widget.label}';
+                }
+                return null;
+              },
         )
       ],
     );
@@ -442,35 +397,33 @@ class _TATextFieldState extends State<TATextField> {
               ...widget.chips.map((chip) => _buildChip(context, chip)),
             ],
           ),
-          Semantics(
-            child: TextFormField(
-              cursorColor: context.colorScheme.onSurface,
-              initialValue: widget.initialValue,
-              controller: _chipController,
-              maxLines: widget.maxLines,
-              maxLength: widget.maxLength,
-              focusNode: _chipFocusNode,
-              style: widget.textStyle ??
-                  TextStyle(color: context.colorScheme.onSurface),
-              decoration: InputDecoration(
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xffdbdbde),
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: context.colorScheme.onSurface),
-                ),
-                contentPadding: const EdgeInsets.only(top: 10),
+          TextFormField(
+            cursorColor: context.colorScheme.onSurface,
+            initialValue: widget.initialValue,
+            controller: _chipController,
+            maxLines: widget.maxLines,
+            maxLength: widget.maxLength,
+            focusNode: widget.focusNode,
+            style: widget.textStyle ??
+                TextStyle(color: context.colorScheme.onSurface),
+            decoration: InputDecoration(
+              border: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
               ),
-              onFieldSubmitted: (value) {
-                _addChip(value);
-                _chipFocusNode.requestFocus();
-              },
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffdbdbde),
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: context.colorScheme.onSurface),
+              ),
+              contentPadding: const EdgeInsets.only(top: 10),
             ),
+            onFieldSubmitted: (value) {
+              _addChip(value);
+              _chipFocusNode.requestFocus();
+            },
           ),
         ],
       ),

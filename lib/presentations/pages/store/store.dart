@@ -5,6 +5,7 @@ import 'package:tradly_app/core/extensions/context_extensions.dart';
 import 'package:tradly_app/core/resources/assets_generated/assets.gen.dart';
 import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
 import 'package:tradly_app/core/routes/app_router.dart';
+import 'package:tradly_app/data/models/product_model.dart';
 import 'package:tradly_app/presentations/layouts/app_bar.dart';
 import 'package:tradly_app/presentations/layouts/scaffold.dart';
 import 'package:tradly_app/presentations/pages/home/views/search_view.dart';
@@ -52,15 +53,9 @@ class _StoreScreenState extends State<StoreScreen> {
       body: BlocBuilder<StoreBloc, StoreState>(
         buildWhen: (previous, current) =>
             previous.products != current.products ||
-            previous.status != current.status,
+            previous.status != current.status ||
+            previous.stores != current.stores,
         builder: (context, state) {
-          if (state.status is StoreStatusLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: context.colorScheme.primary,
-              ),
-            );
-          }
           return state.hasStore
               ? SingleChildScrollView(
                   child: Column(
@@ -80,7 +75,7 @@ class _StoreScreenState extends State<StoreScreen> {
                             ),
                             const SizedBox(height: 16),
                             TADisplaySmallText(
-                              text: state.stores?.name ?? '',
+                              text: state.stores?.storeName ?? '',
                               fontWeight: FontWeight.w700,
                               color: context.colorScheme.onSurface,
                             ),
@@ -272,27 +267,36 @@ class _StoreScreenState extends State<StoreScreen> {
                                 decoration: BoxDecoration(
                                   color: context
                                       .colorScheme.onSecondaryContainer
-                                      .withOpacity(0.5),
+                                      .withAlpha(150),
                                   shape: BoxShape.circle,
                                 ),
                                 child: TAIcons.edit()),
-                            onTap: () {
-                              final product = products[index];
-                              TARouter.navigateTo(
-                                context,
-                                TAPaths.editProduct.name,
-                                extra: product,
-                              );
+                            onTap: () async {
+                              final product = state.products?[index];
+
+                              if (product != null) {
+                                final updatedProduct = await context.pushNamed(
+                                    TAPaths.editProduct.name,
+                                    extra: product);
+
+                                if (updatedProduct != null &&
+                                    updatedProduct is ProductModel) {
+                                  context.read<StoreBloc>().add(
+                                        EditProductButtonEvt(
+                                          product: updatedProduct,
+                                        ),
+                                      );
+                                }
+                              }
                             },
                           ),
                           const SizedBox(width: 50),
                           GestureDetector(
                             onTap: () {
+                              final productId = state.products?[index].id;
+
                               context.read<StoreBloc>().add(
-                                    DeleteProductEvt(
-                                      productId:
-                                          state.products![index].id.toString(),
-                                    ),
+                                    DeleteProductEvt(productId: productId ?? 0),
                                   );
                             },
                             child: Container(
@@ -300,7 +304,7 @@ class _StoreScreenState extends State<StoreScreen> {
                               height: 32,
                               decoration: BoxDecoration(
                                 color: context.colorScheme.onSecondaryContainer
-                                    .withOpacity(0.5),
+                                    .withAlpha(150),
                                 shape: BoxShape.circle,
                               ),
                               child: TAIcons.delete(),

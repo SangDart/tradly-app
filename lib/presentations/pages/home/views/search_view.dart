@@ -21,13 +21,18 @@ class TASearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      cursorColor: context.colorScheme.outline,
-      onChanged: onChanged,
+      cursorColor: context.colorScheme.onSurface,
+      onChanged: (value) {
+        if (onChanged != null) {
+          onChanged!(value);
+        }
+      },
+      style: textStyle ?? TextStyle(color: context.colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: placeholder,
         hintStyle: hintStyle ??
             TextStyle(
-              color: context.colorScheme.outline.withOpacity(0.5),
+              color: context.colorScheme.outline.withAlpha(150),
               fontSize: 14,
             ),
         prefixIcon: Icon(

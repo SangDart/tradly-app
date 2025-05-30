@@ -13,9 +13,9 @@ import 'package:tradly_app/presentations/pages/home/home_screen.dart';
 import 'package:tradly_app/presentations/pages/on_boarding/on_boarding_screen.dart';
 import 'package:tradly_app/presentations/pages/order_history/order_history.dart';
 import 'package:tradly_app/presentations/pages/product_detail/product_detail.dart';
+import 'package:tradly_app/presentations/pages/product_detail/views/add_address.dart';
 import 'package:tradly_app/presentations/pages/product_detail/views/checkout.dart';
 import 'package:tradly_app/presentations/pages/product_detail/views/product_list.dart';
-import 'package:tradly_app/presentations/pages/product_detail/views/wish_list.dart';
 import 'package:tradly_app/presentations/pages/profile/profile.dart';
 import 'package:tradly_app/presentations/pages/store/store.dart';
 import 'package:tradly_app/presentations/pages/store/views/add_product_detail.dart';
@@ -63,9 +63,9 @@ class TARouter {
         },
       ),
       GoRoute(
-        name: TAPaths.addProduct.name,
-        path: TAPaths.addProduct.path,
-        builder: (context, state) => const AddProductDetailScreen(),
+        name: TAPaths.addAddress.name,
+        path: TAPaths.addAddress.path,
+        builder: (context, state) => const AddAddressScreen(),
       ),
       GoRoute(
         name: TAPaths.createStore.name,
@@ -73,9 +73,17 @@ class TARouter {
         builder: (context, state) => const CreateStoreScreen(),
       ),
       GoRoute(
+        name: TAPaths.addProduct.name,
+        path: TAPaths.addProduct.path,
+        builder: (context, state) => const AddProductDetailScreen(),
+      ),
+      GoRoute(
         name: TAPaths.checkout.name,
         path: TAPaths.checkout.path,
-        builder: (context, state) => const CheckoutScreen(),
+        builder: (context, state) {
+          final product = state.extra as ProductModel;
+          return CheckoutScreen(product: product);
+        },
       ),
       GoRoute(
         name: TAPaths.editProduct.name,
@@ -83,16 +91,6 @@ class TARouter {
         builder: (context, state) {
           final product = state.extra as ProductModel;
           return EditProductScreen(product: product);
-        },
-      ),
-      GoRoute(
-        name: TAPaths.wishlist.name,
-        path: TAPaths.wishlist.path,
-        builder: (context, state) {
-          final productId = state.extra is int ? state.extra as int : null;
-          return WishListPage(
-            productId: productId ?? 0,
-          );
         },
       ),
       GoRoute(
@@ -245,13 +243,13 @@ enum TAPaths {
     name: 'editProduct',
     path: '/editProduct',
   ),
-  wishlist(
-    name: 'wishlist',
-    path: '/wishlist',
-  ),
   checkout(
     name: 'myCart',
     path: '/myCart',
+  ),
+  addAddress(
+    name: 'addAddress',
+    path: '/addAddress',
   ),
   productList(
     name: 'productList',

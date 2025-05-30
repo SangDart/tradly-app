@@ -9,17 +9,15 @@ part 'home_state.freezed.dart';
 final class HomeState extends Equatable {
   const HomeState({
     this.categories,
-    this.products,
+    this.stores,
     this.newProducts,
     this.popularProducts,
-    this.stores,
     this.status = const HomeStatus.initial(),
     this.errorMessage,
   });
   final HomeStatus status;
   final String? errorMessage;
   final List<CategoryModel>? categories;
-  final List<ProductModel>? products;
   final List<ProductModel>? newProducts;
   final List<ProductModel>? popularProducts;
   final List<StoreModel>? stores;
@@ -37,10 +35,9 @@ final class HomeState extends Equatable {
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
       categories: categories ?? this.categories,
-      products: products ?? this.products,
       newProducts: newProducts ?? this.newProducts,
-      stores: stores ?? this.stores,
       popularProducts: popularProducts ?? this.popularProducts,
+      stores: stores ?? this.stores,
     );
   }
 
@@ -49,7 +46,6 @@ final class HomeState extends Equatable {
         status,
         errorMessage,
         categories,
-        products,
         newProducts,
         popularProducts,
         stores,
@@ -58,8 +54,8 @@ final class HomeState extends Equatable {
 
 @freezed
 sealed class HomeStatus with _$HomeStatus {
-  const factory HomeStatus.initial() = HomeStatusListInitial;
-  const factory HomeStatus.loading() = HomeStatusListLoading;
-  const factory HomeStatus.success() = HomeStatusListSuccess;
-  const factory HomeStatus.failure() = HomeStatusListFailure;
+  const factory HomeStatus.initial() = HomeStatusInitial;
+  const factory HomeStatus.loading() = HomeStatusLoading;
+  const factory HomeStatus.success() = HomeStatusSuccess;
+  const factory HomeStatus.failure() = HomeStatusFailure;
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -10,13 +11,11 @@ class NotificationService {
 
   bool get initialized => _initialized;
 
-  // Initialize the [FlutterLocalNotificationsPlugin] package.
-
   Future<void> init() async {
     if (_initialized) return;
 
     const initSettingAndroid =
-        AndroidInitializationSettings('mipmap/ic_launcher');
+        AndroidInitializationSettings('@drawable/ic_launcher');
 
     const initSettingIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -30,17 +29,20 @@ class NotificationService {
     );
 
     await notificationsPlugin.initialize(initSettings);
-    _initialized = true; // Ensure _initialized is updated
+    _initialized = true;
   }
-
-  // Notifications detail setup
 
   NotificationDetails notificationsDetails() {
     return const NotificationDetails(
-      android: AndroidNotificationDetails('channel_id', 'channel_name',
-          channelDescription: 'channel_description',
-          importance: Importance.max,
-          priority: Priority.high),
+      android: AndroidNotificationDetails(
+        'channel_id',
+        'channel_name',
+        channelDescription: 'channel_description',
+        importance: Importance.max,
+        priority: Priority.high,
+        icon: '@drawable/ic_launcher',
+        color: Color(0xFF33907C),
+      ),
       iOS: DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
@@ -48,8 +50,6 @@ class NotificationService {
       ),
     );
   }
-
-  // Show notification
 
   Future<void> showNotification({
     int id = 0,
@@ -62,8 +62,6 @@ class NotificationService {
   Future<void> initializeFirebaseMessaging() async {
     supabase.auth.onAuthStateChange.listen((event) async {
       if (event.event == AuthChangeEvent.signedIn) {
-        await FirebaseMessaging.instance.requestPermission();
-
         await FirebaseMessaging.instance.getAPNSToken();
 
         final fcmToken = await FirebaseMessaging.instance.getToken();

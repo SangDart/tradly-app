@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tradly_app/data/models/product_model.dart';
@@ -12,18 +13,22 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
   StoreBloc({required StoreRepository repo})
       : _repo = repo,
         super(const StoreState()) {
-    on<CreateStoreEvt>(_onCreateStore);
-    on<AddProductEvt>(_onAddProduct);
-    on<EditProductEvt>(_onEditProduct);
+    on<CreateStoreButtonEvt>(_onCreateStore);
+    on<AddProductButtonEvt>(_onAddProduct);
+    on<EditProductButtonEvt>(_onEditProduct);
     on<DeleteProductEvt>(_onDeleteProduct);
     on<PickImageEvt>(_onPickImage);
     on<RemoveImageEvt>(_onRemoveImage);
+    on<CreateStoreFormValidateChangedEvt>(_onCreateStoreFormValidateChanged);
+    on<EditFormValidateChangedEvt>(_onEditFormValidateChanged);
+    on<AddProductFormValidateChangedEvt>(_onAddProductFormValidateChanged);
+    on<InitializeEditProductEvt>(_onInitializeEditProduct);
   }
 
   final StoreRepository _repo;
 
   Future<void> _onCreateStore(
-    CreateStoreEvt event,
+    CreateStoreButtonEvt event,
     Emitter<StoreState> emit,
   ) async {
     emit(
@@ -32,27 +37,37 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
       ),
     );
     try {
-      await _repo.createStore(event.store);
+      final insertedStore = await _repo.createStore(event.store);
+
       emit(
         state.copyWith(
           hasStore: true,
-          stores: event.store,
+          stores: insertedStore,
           status: const StoreStatus.success(),
-          errorMessage: null,
         ),
       );
     } catch (e) {
-      emit(
-        state.copyWith(
-          status: const StoreStatus.failure(),
-          errorMessage: e.toString(),
-        ),
-      );
+      emit(state.copyWith(
+        status: const StoreStatus.failure(),
+        errorMessage: e.toString(),
+      ));
     }
   }
 
+  Future<void> _onCreateStoreFormValidateChanged(
+    CreateStoreFormValidateChangedEvt event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        stores: event.store,
+        isFormValid: event.isValidate,
+      ),
+    );
+  }
+
   Future<void> _onAddProduct(
-    AddProductEvt event,
+    AddProductButtonEvt event,
     Emitter<StoreState> emit,
   ) async {
     emit(
@@ -61,17 +76,17 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
       ),
     );
     try {
-      await _repo.addProduct(event.product);
-      final updatedProducts = List<ProductModel>.from(
-        state.products ?? [],
-      )..add(event.product);
+      final createdProduct = await _repo.addProduct(event.product);
+
+      final updatedProducts = List<ProductModel>.from(state.products ?? [])
+        ..add(createdProduct);
       emit(
         state.copyWith(
           products: updatedProducts,
           hasProducts: true,
           status: const StoreStatus.success(),
-          errorMessage: null,
           imageFiles: [],
+          isProductAdded: true,
         ),
       );
     } catch (e) {
@@ -84,8 +99,31 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
     }
   }
 
+  Future<void> _onAddProductFormValidateChanged(
+    AddProductFormValidateChangedEvt event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isFormValid: event.isValidate,
+        products: event.products,
+      ),
+    );
+  }
+
+  Future<void> _onEditFormValidateChanged(
+    EditFormValidateChangedEvt event,
+    Emitter<StoreState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isFormValid: event.isValidate,
+      ),
+    );
+  }
+
   Future<void> _onEditProduct(
-    EditProductEvt event,
+    EditProductButtonEvt event,
     Emitter<StoreState> emit,
   ) async {
     emit(
@@ -93,16 +131,23 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
         status: const StoreStatus.loading(),
       ),
     );
+
     try {
       await _repo.editProduct(event.product);
+
       final updatedProducts = state.products?.map((product) {
-        return product.id == event.product.id ? event.product : product;
+        if (product.id == event.product.id) {
+          return event.product;
+        }
+        return product;
       }).toList();
+
       emit(
         state.copyWith(
           products: updatedProducts,
           status: const StoreStatus.success(),
           imageFiles: [],
+          productToEdit: null,
         ),
       );
     } catch (e) {
@@ -126,16 +171,15 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
     );
     try {
       await _repo.deleteProduct(event.productId);
-      final productIdInt = int.tryParse(event.productId);
-      final updatedProducts = state.products
-          ?.where((product) => productIdInt != null
-              ? product.id != productIdInt
-              : product.id.toString() != event.productId)
+
+      final updatedProducts = (state.products ?? [])
+          .where((product) => product.id != event.productId)
           .toList();
+
       emit(
         state.copyWith(
           products: updatedProducts,
-          hasProducts: updatedProducts?.isNotEmpty ?? false,
+          hasProducts: updatedProducts.isNotEmpty,
           status: const StoreStatus.success(),
         ),
       );
@@ -155,7 +199,7 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
   ) async {
     final updatedImages = List<File>.from(
       state.imageFiles ?? [],
-    )..removeAt(event.index);
+    )..removeAt(event.image);
     emit(
       state.copyWith(
         imageFiles: updatedImages,
@@ -168,12 +212,12 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
     PickImageEvt event,
     Emitter<StoreState> emit,
   ) async {
-    if ((state.imageFiles?.length ?? 0) >= event.maxPhotos) {
-      emit(
-        state.copyWith(
-          errorMessage: 'Maximum ${event.maxPhotos} photos allowed',
-        ),
-      );
+    final currentImageCount = state.imageFiles?.length ?? 0;
+
+    if (currentImageCount >= event.maxPhotos) {
+      emit(state.copyWith(
+        errorMessage: 'Maximum ${event.maxPhotos} photos allowed',
+      ));
       return;
     }
 
@@ -182,24 +226,48 @@ class StoreBloc extends Bloc<StoreEvt, StoreState> {
         source: ImageSource.gallery,
         maxWidth: 1600,
         maxHeight: 1200,
+        imageQuality: 85,
       );
 
       if (pickedFile != null) {
+        final file = File(pickedFile.path);
+        final fileSize = await file.length();
+        const maxFileSize = 5 * 1024 * 1024;
+
+        if (fileSize > maxFileSize) {
+          emit(state.copyWith(
+            errorMessage: 'Image size should be less than 5MB',
+          ));
+          return;
+        }
+
         final updatedImages = List<File>.from(state.imageFiles ?? [])
-          ..add(File(pickedFile.path));
-        emit(
-          state.copyWith(
-            imageFiles: updatedImages,
-            errorMessage: null,
-          ),
-        );
+          ..add(file);
+
+        emit(state.copyWith(
+          imageFiles: updatedImages,
+          errorMessage: null,
+        ));
       }
     } catch (e) {
-      emit(
-        state.copyWith(
-          errorMessage: 'Failed to pick image: $e',
-        ),
-      );
+      emit(state.copyWith(
+        errorMessage: 'Failed to pick image: ${e.toString()}',
+      ));
     }
+  }
+
+  Future<void> _onInitializeEditProduct(
+    InitializeEditProductEvt event,
+    Emitter<StoreState> emit,
+  ) async {
+    final imagePaths = event.product.imageUrl.split(',');
+    final imageFiles = imagePaths.map((path) => File(path)).toList();
+
+    emit(
+      state.copyWith(
+        productToEdit: event.product,
+        imageFiles: imageFiles,
+      ),
+    );
   }
 }
