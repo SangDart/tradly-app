@@ -49,7 +49,10 @@ jobs:
       # Runs unit test
       - name: Run tests
         run: flutter test
-      
+
+      # Clean build directory
+      - name: Clean build directory
+        run: flutter clean
 
       # Create android apk
       - name: Build apk
