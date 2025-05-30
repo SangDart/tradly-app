@@ -26,6 +26,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+        
       - name: Verify formatting
         run: dart format --output=none .
 
@@ -36,7 +37,7 @@ jobs:
         run: flutter build apk
         env:
           FLUTTER_BUILD_MODE: release
-          
+
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:

@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[TradlyApp][Dev] Start development",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "lib/main.dart",
+        },
+        {
+            "name": "[TradlyApp][Dev] Start development with Device Preview",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "tradly-app/lib/main_device_preview.dart",
+        },
+    ]
+}
