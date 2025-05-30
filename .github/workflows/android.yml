@@ -30,6 +30,18 @@ jobs:
           flutter-version: '3.27.0'
           channel: 'stable'
 
+      - name: Install Android SDK Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O android_sdk_tools.zip
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          unzip android_sdk_tools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+          export PATH=$ANDROID_HOME/platform-tools:$PATH
+
       - name: Accept Android SDK Licenses
         run: yes | sdkmanager --licenses
 
