@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.tradly_app"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "29.0.13113456"
     
 
@@ -22,24 +22,23 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    externalNativeBuild {
-        cmake {
-            // Sets the path to the CMakeLists.txt file.
-            path "src/main/cpp/CMakeLists.txt"
-            version "3.22.1"
-        }
-    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.tradly_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdkVersion 21 // Ensure this is at least 21
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled true 
     }
+    externalNativeBuild {
+    cmake {
+        version "4.0.2"
+    }
+}
 
     buildTypes {
         release {
