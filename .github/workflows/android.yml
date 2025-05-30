@@ -1,60 +1,22 @@
-name: Flutter Android CI/CD
+# Note: In a yml each level is padded by 2 spaces
+name: Flutter
 
 on:
+  # Runs this action when you push on master
   push:
-    branches: 
-      - main
+    branches: [ "main" ]
+  # Runs this when a PR against master is created
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  flutter_job:
+
+    # The machine, we can also use windows-latest or ubuntu-latest
+    # We are choosing macos-latest because we will be also building for iOS
+    runs-on: macos-latest
 
     steps:
-      - name: Start CI/CD
-        run: echo "Starting Flutter Android CI/CD pipeline"
 
+      # Clones the project on the machine
       - uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.27.0'
-          channel: 'stable'
-
-      - name: Install Android SDK Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O android_sdk_tools.zip
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          unzip android_sdk_tools.zip -d $HOME/android-sdk/cmdline-tools
-          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
-          echo "export ANDROID_HOME=$HOME/android-sdk" >> $HOME/.bashrc
-          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $HOME/.bashrc
-          echo "export PATH=$ANDROID_HOME/platform-tools:$PATH" >> $HOME/.bashrc
-          source $HOME/.bashrc
-          sdkmanager --version || echo "SDK Manager installation failed"
-
-      - name: Accept Android SDK Licenses
-        run: yes | sdkmanager --licenses
-
-      - name: Get Flutter Dependencies
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --debug --build-name=1.0.0 --build-number=1
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-debug-apk
-          path: build/app/outputs/apk/debug/app-debug.apk
