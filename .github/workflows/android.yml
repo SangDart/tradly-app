@@ -40,6 +40,7 @@ jobs:
           unzip -q commandlinetools.zip -d latest
           rm commandlinetools.zip
 
+          
       # Accept SDK licenses and install NDK
       - name: Accept SDK licenses
         run: yes | sdkmanager --licenses
