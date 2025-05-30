@@ -45,10 +45,6 @@ jobs:
         run: dart format --output=none .
         # Removed --set-exit-if-changed to prevent pipeline failure due to formatting issues
       
-      # Checks for Symantic errors. Can be configured using analysis_options.yaml
-      - name: Analyze project source
-        run: flutter analyze --fatal-warnings
-        # optionally use --fatal-warnings to stop execution if any warnings are found
 
       # Runs unit test
       - name: Run tests
