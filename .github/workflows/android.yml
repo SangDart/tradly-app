@@ -43,6 +43,7 @@ jobs:
           build-tools: 31.0.0
           target: android-31
           ndk: false
+          cmake: false
       
       # Fetches proj dependencies from pub
       - name: Install dependencies
