@@ -35,9 +35,6 @@ android {
         multiDexEnabled true 
     }
     externalNativeBuild {
-    cmake {
-        version "4.0.2"
-    }
 }
 
     buildTypes {
