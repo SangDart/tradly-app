@@ -1,36 +1,36 @@
-name: Flutter
+name: Flutter Android CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  flutter_job:
-
-    # The machine, we can also use windows-latest or ubuntu-latest
-    # We are choosing macos-latest because we will be also building for iOS
+  build:
     runs-on: ubuntu-latest
 
     steps:
 
-      # Clones the project on the machine
+      - name: Flutter Android CI/CD
+        run: echo "Starting Flutter Android CI/CD pipeline"
       - uses: actions/checkout@v4
 
       # Sets up java 17
+      - name: Set JDK
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
       # Installs flutter and related dependency on this machine
-      - name: Setup Flutter
+      - name: Install Flutter Version
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          # flutter-version: '3.16.8'
-          # ^ If you want to use a specific version of flutter
+          flutter-version: '3.33.0'
 
       # Setup Android SDK
       - name: Setup Android SDK
@@ -39,13 +39,11 @@ jobs:
       # Fetches proj dependencies from pub
       - name: Install dependencies
         run: flutter pub get
-        # ^ If you want to use a specific version of flutter
       
       # Verifies if the dart code is formatted well
       - name: Verify formatting
         run: dart format --output=none .
       
-
       # Runs unit test
       - name: Run tests
         run: flutter test
@@ -61,9 +59,43 @@ jobs:
       # Create android app bundle
       - name: Build app bundle
         run: flutter build appbundle
+        
+      # Create android apk for dev
+      - name: Build dev apk
+        run: flutter build apk --debug --flavor dev
+      
+      # Create android apk for staging
+      - name: Build staging apk
+        run: flutter build apk --debug --flavor staging
+      
+      # Create android apk for production
+      - name: Build production apk
+        run: flutter build apk --debug --flavor production
+      
       # Uploads the apk as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
           path: build/app/outputs/apk/debug/app-debug.apk
+      
+      # Upload dev APK as an artifact
+      - name: Upload Dev APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-apk
+          path: build/app/outputs/apk/dev/app-dev-debug.apk
+      
+      # Upload staging APK as an artifact
+      - name: Upload Staging APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-apk
+          path: build/app/outputs/apk/staging/app-staging-debug.apk
+      
+      # Upload production APK as an artifact
+      - name: Upload Production APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-apk
+          path: build/app/outputs/apk/production/app-production-debug.apk
