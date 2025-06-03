@@ -57,43 +57,9 @@ jobs:
       # Create android app bundle
       - name: Build app bundle
         run: flutter build appbundle
-        
-      # Create android apk for dev
-      - name: Build dev apk
-        run: flutter build apk --debug --flavor dev
-      
-      # Create android apk for staging
-      - name: Build staging apk
-        run: flutter build apk --debug --flavor staging
-      
-      # Create android apk for production
-      - name: Build production apk
-        run: flutter build apk --debug --flavor production
-      
       # Uploads the apk as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
           path: build/app/outputs/apk/debug/app-debug.apk
-      
-      # Upload dev APK as an artifact
-      - name: Upload Dev APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: dev-apk
-          path: build/app/outputs/apk/dev/app-dev-debug.apk
-      
-      # Upload staging APK as an artifact
-      - name: Upload Staging APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: staging-apk
-          path: build/app/outputs/apk/staging/app-staging-debug.apk
-      
-      # Upload production APK as an artifact
-      - name: Upload Production APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-apk
-          path: build/app/outputs/apk/production/app-production-debug.apk
