@@ -29,7 +29,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.33.0'
 
       # Setup Android SDK
       - name: Setup Android SDK
