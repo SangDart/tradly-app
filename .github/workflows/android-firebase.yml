@@ -2,7 +2,7 @@ name: Flutter Android CI/CD
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
     branches:
@@ -21,27 +21,27 @@ jobs:
       - name: Set JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
 
       # Installs flutter and related dependency on this machine
       - name: Install Flutter Version
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       # Setup Android SDK
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-      
+
       # Fetches proj dependencies from pub
       - name: Install dependencies
         run: flutter pub get
-      
+
       # Verifies if the dart code is formatted well
       - name: Verify formatting
         run: dart format --output=none .
-      
+
       # Runs unit test
       - name: Run tests
         run: flutter test
@@ -53,10 +53,35 @@ jobs:
       # Create android apk
       - name: Build apk
         run: flutter build apk --debug
-      
+
       # Create android app bundle
       - name: Build app bundle
         run: flutter build appbundle
+
+      # Authenticate with Firebase
+      - name: Authenticate with Firebase
+        uses: w9jds/firebase-action@v2
+        with:
+          args: firebase auth:ci-login
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      # Deploy APK to Firebase App Distribution
+      - name: Deploy to Firebase App Distribution
+        run: firebase appdistribution:distribute build/app/outputs/apk/debug/app-debug.apk \
+          --app ${{ secrets.FIREBASE_APP_ID }} \
+          --groups testers
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      # Deploy AAB to Firebase App Distribution
+      - name: Deploy AAB to Firebase App Distribution
+        run: firebase appdistribution:distribute build/app/outputs/bundle/release/app-release.aab \
+          --app ${{ secrets.FIREBASE_APP_ID }} \
+          --groups testers
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
       # Uploads the apk as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
