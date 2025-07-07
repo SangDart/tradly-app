@@ -50,6 +50,10 @@ jobs:
       - name: Clean build directory
         run: flutter clean
 
+      # Create android apk
+      - name: Build apk
+        run: flutter build apk --debug
+
       - name: Write service account JSON
         run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > ${{ github.workspace }}/firebase.json
 
@@ -65,6 +69,3 @@ jobs:
             --token "$(cat ${{ github.workspace }}/firebase.json | jq -r '.token // empty')" \
             --service-account ${{ github.workspace }}/firebase.json \
             --groups testers
-
-        env:
-          FIREBASE_CLI_EXPERIMENTS: webframeworks
