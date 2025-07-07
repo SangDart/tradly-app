@@ -63,8 +63,9 @@ jobs:
           firebase --version
 
       - name: Upload to Firebase App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/firebase.json
         run: |
           firebase appdistribution:distribute build/app/outputs/apk/debug/app-debug.apk \
             --app ${{ secrets.FIREBASE_APP_ID }} \
-            --service-account ${{ github.workspace }}/firebase.json \
             --groups testers
