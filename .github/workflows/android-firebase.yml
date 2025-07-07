@@ -62,11 +62,6 @@ jobs:
           curl -sL https://firebase.tools | bash
           firebase --version
 
-      - name: Authenticate with Firebase
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/firebase.json
-        run: firebase auth:activate-service-account --key-file=${{ github.workspace }}/firebase.json
-
       - name: Upload to Firebase App Distribution
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/firebase.json
