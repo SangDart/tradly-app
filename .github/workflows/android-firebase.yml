@@ -53,14 +53,17 @@ jobs:
       - name: Build apk
         run: flutter build apk --debug
 
-      - name: Write service account JSON
-        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > ${{ github.workspace }}/firebase.json
+      # Decode Firebase credentials
+      - name: Decode Firebase credentials
+        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" | base64 --decode > ${{ github.workspace }}/firebase.json
 
+      # Install Firebase CLI
       - name: Install Firebase CLI
         run: |
           curl -sL https://firebase.tools | bash
           firebase --version
 
+      # Upload to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/firebase.json
