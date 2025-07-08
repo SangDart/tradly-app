@@ -50,7 +50,6 @@ jobs:
       - name: Clean build directory
         run: flutter clean
 
-      # Create android apk
       - name: Build apk
         run: flutter build apk --debug
 
