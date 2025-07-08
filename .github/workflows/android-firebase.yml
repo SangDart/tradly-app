@@ -34,6 +34,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      # Install CMake
+      - name: Install CMake
+        run: |
+          sdkmanager "cmake;4.0.2"
+
       # Fetches proj dependencies from pub
       - name: Install dependencies
         run: flutter pub get
