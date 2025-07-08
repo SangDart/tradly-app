@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
-import 'package:tradly_app/presentations/pages/product_detail/states/product_detail_event.dart';
+import 'package:tradly_app/resources/l10n_generated/l10n.dart';
+import 'package:tradly_app/features/product_detail/states/product_detail_event.dart';
 
 import '../../helper/utils.dart';
 import '../product_detail_mocks.dart';
@@ -70,6 +70,12 @@ void main() {
           ProductDetailCheckoutEvtPropsScenario(),
           ProductDetailCheckoutEvtWithToStringScenario(),
           ProductDetailCheckoutEvtEqualityScenario(),
+        ],
+      ),
+      TAUTFeature(
+        description: 'ProductDetailToggleWishListEvt',
+        scenarios: [
+          ProductDetailToggleWishListEvtPropsScenario(),
         ],
       ),
     ],
@@ -494,6 +500,28 @@ class ProductDetailCheckoutEvtEqualityScenario
               ),
           expect: (bool result) {
             expect(result, isTrue);
+          },
+        );
+}
+
+class ProductDetailToggleWishListEvtPropsScenario
+    extends TAUTScenario<ProductDetailToggleWishListEvt, List<Object?>> {
+  ProductDetailToggleWishListEvtPropsScenario()
+      : super(
+          description: '''
+          Scenario: Test ProductDetailToggleWishListEvt Props
+            Given ProductDetailToggleWishListEvt event
+            When creating a ProductDetailToggleWishListEvt event and accessing props
+            Then the props should not be empty
+            ''',
+          when: () async {
+            return ProductDetailToggleWishListEvt(
+              productId: 1,
+            );
+          },
+          act: (event) => event.props,
+          expect: (List<Object?> result) {
+            expect(result, [1]);
           },
         );
 }

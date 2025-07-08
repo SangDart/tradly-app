@@ -4,11 +4,11 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
-import 'package:tradly_app/data/repositories/store_repo.dart.dart';
-import 'package:tradly_app/presentations/pages/store/states/store_bloc.dart';
-import 'package:tradly_app/presentations/pages/store/states/store_event.dart';
-import 'package:tradly_app/presentations/pages/store/states/store_state.dart';
+import 'package:tradly_app/resources/l10n_generated/l10n.dart';
+import 'package:tradly_app/features/store/repositories/store_repo.dart';
+import 'package:tradly_app/features/store/states/store_bloc.dart';
+import 'package:tradly_app/features/store/states/store_event.dart';
+import 'package:tradly_app/features/store/states/store_state.dart';
 
 import '../../helper/utils.dart';
 import '../store_mocks.dart';
@@ -474,7 +474,7 @@ class PickImageEvtSuccessScenario
           },
           build: () => StoreBloc(repo: storeRepository),
           act: (bloc) => bloc.add(
-            PickImageEvt(maxPhotos: 1),
+            PickImageEvt(maxPhotos: 1, source: ImageSource.gallery),
           ),
           expect: () => [],
         );
@@ -494,7 +494,7 @@ class PickImageEvtFailureScenario
           setUp: () {},
           build: () => StoreBloc(repo: storeRepository),
           act: (bloc) => bloc.add(
-            PickImageEvt(maxPhotos: 1),
+            PickImageEvt(maxPhotos: 1, source: ImageSource.gallery),
           ),
           expect: () => [],
         );
@@ -590,7 +590,6 @@ class CreateStoreFormValidateChangedEvtSuccessScenario
               hasProducts: false,
               imageFiles: null,
               productToEdit: null,
-              isProductAdded: false,
               isFormValid: true,
             )
           ],
@@ -623,7 +622,6 @@ class CreateStoreFormValidateChangedEvtFailureScenario
               hasProducts: false,
               imageFiles: null,
               productToEdit: null,
-              isProductAdded: false,
               isFormValid: false,
             )
           ],
@@ -656,7 +654,6 @@ class AddProductFormValidateChangedEvtSuccessScenario
               hasProducts: false,
               imageFiles: null,
               productToEdit: null,
-              isProductAdded: false,
               isFormValid: true,
             )
           ],
@@ -689,7 +686,6 @@ class AddProductFormValidateChangedEvtFailureScenario
               hasProducts: false,
               imageFiles: null,
               productToEdit: null,
-              isProductAdded: false,
               isFormValid: false,
             )
           ],
@@ -723,7 +719,6 @@ class EditFormValidateChangedEvtSuccessScenario
               hasProducts: false,
               imageFiles: null,
               productToEdit: null,
-              isProductAdded: false,
               isFormValid: true,
             )
           ],
@@ -757,7 +752,6 @@ class EditFormValidateChangedEvtFailureScenario
               hasProducts: false,
               imageFiles: null,
               productToEdit: null,
-              isProductAdded: false,
               isFormValid: false,
             )
           ],

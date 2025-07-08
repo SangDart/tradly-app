@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
-import 'package:tradly_app/presentations/pages/auth/sign_in/states/sign_in_event.dart';
+import 'package:tradly_app/resources/l10n_generated/l10n.dart';
+import 'package:tradly_app/features/auth/states/sign_in_event.dart';
 
 import '../../../helper/utils.dart';
 import '../../auth_mocks.dart';
@@ -16,6 +16,12 @@ void main() {
   TAUnitTest(
     description: 'SignInEvent Tests',
     features: [
+      TAUTFeature(
+        description: 'SignInEvent',
+        scenarios: [
+          SignInEventPropsScenario(),
+        ],
+      ),
       TAUTFeature(
         description: 'SignInFormValidateChangedEvt',
         scenarios: [
@@ -37,6 +43,25 @@ void main() {
   ).test();
 }
 
+class SignInEventPropsScenario extends TAUTScenario<SignInEvt, List<Object?>> {
+  SignInEventPropsScenario()
+      : super(
+          description: '''
+          Scenario: Test SignInEvt Props
+            Given SignInEvt event
+            When creating a SignInEvt event and accessing props
+            Then the props should be empty
+            ''',
+          when: () async {
+            return SignInEvt();
+          },
+          act: (event) => event.props,
+          expect: (List<Object?> result) {
+            expect(result, isEmpty);
+          },
+        );
+}
+
 class SignInFormValidateChangedPropsScenario
     extends TAUTScenario<SignInEvt, List<Object?>> {
   SignInFormValidateChangedPropsScenario()
@@ -53,11 +78,7 @@ class SignInFormValidateChangedPropsScenario
             expect(
               result,
               equals(
-                [
-                  'test@example.com',
-                  'password123',
-                  true,
-                ],
+                ['test@example.com', 'password123', true, null],
               ),
             );
           },
@@ -80,11 +101,7 @@ class SignInFormValidateChangedSuccessScenario
               expect(
                 result,
                 equals(
-                  [
-                    'test@example.com',
-                    'password123',
-                    true,
-                  ],
+                  ['test@example.com', 'password123', true, null],
                 ),
               );
             });
@@ -106,11 +123,7 @@ class SignInFormValidateChangedFailureScenario
             expect(
               result,
               equals(
-                [
-                  null,
-                  null,
-                  false,
-                ],
+                [null, null, false, null],
               ),
             );
           },

@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
-import 'package:tradly_app/data/repositories/product_repo.dart';
-import 'package:tradly_app/presentations/pages/product_detail/states/product_detail_bloc.dart';
-import 'package:tradly_app/presentations/pages/product_detail/states/product_detail_event.dart';
-import 'package:tradly_app/presentations/pages/product_detail/states/product_detail_state.dart';
+import 'package:tradly_app/resources/l10n_generated/l10n.dart';
+import 'package:tradly_app/features/product_detail/repositories/product_repo.dart';
+import 'package:tradly_app/features/product_detail/states/product_detail_bloc.dart';
+import 'package:tradly_app/features/product_detail/states/product_detail_event.dart';
+import 'package:tradly_app/features/product_detail/states/product_detail_state.dart';
 
 import '../../helper/utils.dart';
 import '../product_detail_mocks.dart';
@@ -91,6 +91,17 @@ void main() {
             productRepository: productRepository,
           ),
           ProductDetailCheckoutEvtFailureScenario(
+            productRepository: productRepository,
+          ),
+        ],
+      ),
+      TABlocTestFeature(
+        description: 'ProductDetailToggleWishListEvt',
+        scenarios: [
+          ProductDetailToggleWishListEvtSuccessScenario(
+            productRepository: productRepository,
+          ),
+          ProductDetailToggleWishListEvtFailureScenario(
             productRepository: productRepository,
           ),
         ],
@@ -573,5 +584,60 @@ class ProductDetailCheckoutEvtFailureScenario
               const ProductDetailStatus.failure(),
             ),
           ],
+        );
+}
+
+class ProductDetailToggleWishListEvtSuccessScenario
+    extends TABlocTestScenario<ProductDetailBloc, ProductDetailState> {
+  ProductDetailToggleWishListEvtSuccessScenario({
+    required ProductRepository productRepository,
+  }) : super(
+          description: '''
+         Scenario: Ensure that when the ProductDetailToggleWishListEvt is initialized, the wishlist is toggled successfully
+          Given: The ProductDetailToggleWishListEvt is created with a mock repository.
+          When: The _onToggleWishList method is called. 
+          Then: The bloc should emit a HomeState with a status of success.
+          ''',
+          setUp: () {
+            when(() => productRepository.fetchProductsByCategoryId(0))
+                .thenAnswer((_) async => []);
+            when(() => productRepository.fetchProductById(0)).thenAnswer(
+              (_) async => [],
+            );
+          },
+          build: () => ProductDetailBloc(
+            repo: productRepository,
+          ),
+          act: (bloc) => bloc.add(
+            const ProductDetailToggleWishListEvt(productId: 0),
+          ),
+          expect: () => [],
+        );
+}
+
+class ProductDetailToggleWishListEvtFailureScenario
+    extends TABlocTestScenario<ProductDetailBloc, ProductDetailState> {
+  ProductDetailToggleWishListEvtFailureScenario({
+    required ProductRepository productRepository,
+  }) : super(
+          description: '''
+         Scenario: Ensure that when the ProductDetailToggleWishListEvt is initialized, the wishlist toggle fails
+          Given: The ProductDetailToggleWishListEvt is created with a mock repository.
+          When: The _onToggleWishList method is called. 
+          Then: The bloc should emit a HomeState with a status of failure.
+          ''',
+          setUp: () {
+            when(() => productRepository.fetchProductsByCategoryId(0))
+                .thenThrow(Exception());
+            when(() => productRepository.fetchProductById(0))
+                .thenThrow(Exception());
+          },
+          build: () => ProductDetailBloc(
+            repo: productRepository,
+          ),
+          act: (bloc) => bloc.add(
+            const ProductDetailToggleWishListEvt(productId: 0),
+          ),
+          expect: () => [],
         );
 }

@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
-import 'package:tradly_app/presentations/pages/store/states/store_event.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tradly_app/resources/l10n_generated/l10n.dart';
+import 'package:tradly_app/features/store/states/store_event.dart';
 
 import '../../helper/utils.dart';
 import '../store_mocks.dart';
@@ -658,12 +659,13 @@ class PickImageEvtPropsScenario
             ''',
           when: () async {
             return PickImageEvt(
+              source: ImageSource.camera,
               maxPhotos: 1,
             );
           },
           act: (event) => event.props,
           expect: (List<Object?> result) {
-            expect(result, [1]);
+            expect(result, [1, ImageSource.camera]);
           },
         );
 }
@@ -680,6 +682,7 @@ class PickImageEvtWithToStringScenario
             ''',
           when: () async {
             return PickImageEvt(
+              source: ImageSource.camera,
               maxPhotos: 1,
             );
           },
@@ -701,12 +704,14 @@ class PickImageEvtEqualityScenario extends TAUTScenario<PickImageEvt, bool> {
             ''',
           when: () async {
             return PickImageEvt(
+              source: ImageSource.camera,
               maxPhotos: 1,
             );
           },
           act: (event) =>
               event ==
               PickImageEvt(
+                source: ImageSource.camera,
                 maxPhotos: 1,
               ),
           expect: (bool result) {

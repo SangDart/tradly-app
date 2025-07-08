@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tradly_app/core/resources/l10n_generated/l10n.dart';
-import 'package:tradly_app/presentations/pages/auth/sign_up/states/sign_up_event.dart';
+import 'package:tradly_app/resources/l10n_generated/l10n.dart';
+import 'package:tradly_app/features/auth/states/sign_up_event.dart';
 
 import '../../../helper/utils.dart';
 import '../../auth_mocks.dart';
@@ -16,6 +16,12 @@ void main() {
   TAUnitTest(
     description: 'SignUpEvent Tests',
     features: [
+      TAUTFeature(
+        description: 'SignUpEvent',
+        scenarios: [
+          SignUpEventPropsScenario(),
+        ],
+      ),
       TAUTFeature(
         description: 'SignUpFormValidateChangedEvt',
         scenarios: [
@@ -35,6 +41,25 @@ void main() {
       ),
     ],
   ).test();
+}
+
+class SignUpEventPropsScenario extends TAUTScenario<SignUpEvt, List<Object?>> {
+  SignUpEventPropsScenario()
+      : super(
+          description: '''
+          Scenario: Test SignUpEvt Props
+            Given SignUpEvt event
+            When creating a SignUpEvt event and accessing props
+            Then the props should be empty
+            ''',
+          when: () async {
+            return SignUpEvt();
+          },
+          act: (event) => event.props,
+          expect: (List<Object?> result) {
+            expect(result, isEmpty);
+          },
+        );
 }
 
 class SignUpFormValidateChangedPropsScenario
