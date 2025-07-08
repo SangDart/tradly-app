@@ -53,7 +53,7 @@ jobs:
       - name: Build apk
         run: flutter build apk --debug
 
-      # Decode Firebase credentials
+      # Decode Firebase credential
       - name: Decode Firebase credentials
         run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" | base64 --decode > ${{ github.workspace }}/firebase.json
 
